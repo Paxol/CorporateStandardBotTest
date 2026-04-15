@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorporateStandardBotTest.Api", "CorporateStandardBotTest.Api\CorporateStandardBotTest.Api.csproj", "{6F0E6574-AF92-4A7E-BF7A-B3ADB8065413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorporateStandardBotTest.UI", "CorporateStandardBotTest.UI\CorporateStandardBotTest.UI.esproj", "{582D099A-B064-4F3D-A499-B4B3C4F4F8CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F0E6574-AF92-4A7E-BF7A-B3ADB8065413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F0E6574-AF92-4A7E-BF7A-B3ADB8065413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F0E6574-AF92-4A7E-BF7A-B3ADB8065413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F0E6574-AF92-4A7E-BF7A-B3ADB8065413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{582D099A-B064-4F3D-A499-B4B3C4F4F8CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{582D099A-B064-4F3D-A499-B4B3C4F4F8CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{582D099A-B064-4F3D-A499-B4B3C4F4F8CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{582D099A-B064-4F3D-A499-B4B3C4F4F8CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
