@@ -1,7 +1,15 @@
+using CorporateStandardBotTest.BusinessLogic.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using CorporateStandardBotTest.Api.Extensions;
+using MinimalHelpers.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
+
+builder.Services.AddAzureSearchKnowledgeBase(builder.Configuration);
+builder.Services.AddBusinessLogic();
 
 // Add services to the container.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -27,7 +35,6 @@ app.UseHttpsRedirection();
 app.MapFallbackToFile("/index.html")
     .AllowAnonymous();
 
-app.MapGet("/api/hello", () => Results.Ok("Hello from API!"))
-    .Produces<string>();
+app.MapEndpoints();
 
 app.Run();

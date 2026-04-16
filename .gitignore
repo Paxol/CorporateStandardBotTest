@@ -402,3 +402,6 @@ FodyWeavers.xsd
 # Frontend dist
 CorporateStandardBotTest.UI/dist/*
 CorporateStandardBotTest.UI/obj*
+
+# Local settings
+CorporateStandardBotTest.Api/appsettings.local.json

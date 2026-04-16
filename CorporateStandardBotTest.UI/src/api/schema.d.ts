@@ -4,21 +4,27 @@
  */
 
 export interface paths {
-    "/api/hello": {
+    "/api/chat/complete": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: {
+        get?: never;
+        put?: never;
+        post: {
             parameters: {
                 query?: never;
                 header?: never;
                 path?: never;
                 cookie?: never;
             };
-            requestBody?: never;
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["AiChat"];
+                };
+            };
             responses: {
                 /** @description OK */
                 200: {
@@ -26,13 +32,20 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["AiChatMessage"];
+                    };
+                };
+                /** @description Internal Server Error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/problem+json": components["schemas"]["ProblemDetails"];
                     };
                 };
             };
         };
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -42,7 +55,30 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        AiChat: {
+            messages: components["schemas"]["AiChatMessage"][];
+        };
+        AiChatMessage: {
+            role: components["schemas"]["AiMessageRole"];
+            content: string;
+            references?: null | components["schemas"]["AiChatReference"][];
+        };
+        AiChatReference: {
+            id: string;
+            url: string;
+            name: string;
+        };
+        AiMessageRole: number;
+        ProblemDetails: {
+            type?: null | string;
+            title?: null | string;
+            /** Format: int32 */
+            status?: null | number | string;
+            detail?: null | string;
+            instance?: null | string;
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;
