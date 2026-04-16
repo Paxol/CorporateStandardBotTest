@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type SubmitEvent } from "react"
 
 import { $api } from "@/api"
 import type { components } from "@/api/schema"
 import { ChatMessage } from "@/components/ChatMessage"
 import { PromptInput } from "@/components/PromptInput"
-import { Button } from "./components/ui/button"
+import { Button } from "@/components/ui/button"
+import { LoadingMessage } from "@/components/LoadingMessage"
 import { SquarePenIcon } from "lucide-react"
 
 type AiChatMessage = components["schemas"]["AiChatMessage"]
@@ -42,13 +43,18 @@ function App() {
   const [submitError, setSubmitError] = useState<{ prompt: string | null, error: string } | null>(null)
   const pendingPromptRef = useRef<string | null>(null)
   const scrollAnchorRef = useRef<HTMLDivElement | null>(null)
+  const lastUserMessageRef = useRef<HTMLDivElement | null>(null)
+  const [reasoning, setReasoning] = useState<"low" | "medium">("low")
   const mutation = $api.useMutation("post", "/api/chat/complete")
 
   useEffect(() => {
-    scrollAnchorRef.current?.scrollIntoView({ block: "end", behavior: "smooth" })
-  }, [messages.length, mutation.isPending, submitError])
+    if (mutation.isPending)
+      scrollAnchorRef.current?.scrollIntoView({ block: "end", behavior: "smooth" })
+    else
+      lastUserMessageRef.current?.scrollIntoView({ block: "start", behavior: "smooth" })
+  }, [mutation.isPending])
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (mutation.isPending) {
@@ -111,6 +117,8 @@ function App() {
     mutation.reset()
   }
 
+  const lastUserMessageIdx = messages.findLastIndex((message) => message.role === USER_ROLE)
+
   return (
     <div className="min-h-dvh bg-muted/30">
       <div className="flex h-dvh flex-col">
@@ -137,21 +145,22 @@ function App() {
                 </div>
               )}
 
-              {messages.map((message, index) =>
-                message.role === USER_ROLE ? (
-                  <UserMessage key={`${index}-${message.role}-${message.content}`} message={message.content} />
-                ) : (
-                  <ChatMessage key={`${index}-${message.role}-${message.content}`} message={message} />
-                )
-              )}
+              {
+                messages.map((message, index) => {
+                  if (message.role === USER_ROLE) {
+                    if (index === lastUserMessageIdx)
+                      return <div ref={lastUserMessageRef} key={`${index}-${message.role}-${message.content}`}>
+                        <UserMessage message={message.content} />
+                      </div>
 
-              {mutation.isPending && (
-                <div className="flex justify-start">
-                  <div className="rounded-2xl border border-border/70 bg-background px-4 py-3 text-sm text-muted-foreground shadow-sm">
-                    Thinking...
-                  </div>
-                </div>
-              )}
+                    return <UserMessage key={`${index}-${message.role}-${message.content}`} message={message.content} />
+                  }
+
+                  return <ChatMessage key={`${index}-${message.role}-${message.content}`} message={message} />
+                })
+              }
+
+              {mutation.isPending && <LoadingMessage />}
 
               {submitError && (
                 <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive shadow-sm">
@@ -168,6 +177,8 @@ function App() {
                 name="prompt"
                 value={prompt}
                 onValueChange={setPrompt}
+                reasoning={reasoning}
+                setReasoning={setReasoning}
                 disabled={mutation.isPending}
                 isSubmitting={mutation.isPending}
               />

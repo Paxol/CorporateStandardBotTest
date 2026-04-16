@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 import {
   InputGroup,
   InputGroupAddon,
@@ -23,6 +21,8 @@ type PromptInputProps = {
   name?: string
   value: string
   onValueChange: (value: string) => void
+  reasoning: "low" | "medium"
+  setReasoning: (reasoning: "low" | "medium") => void
   disabled?: boolean
   isSubmitting?: boolean
   maxLength?: number
@@ -32,13 +32,14 @@ export function PromptInput({
   name = "prompt",
   value,
   onValueChange,
+  reasoning,
+  setReasoning,
   disabled = false,
   isSubmitting = false,
   maxLength = 280,
 }: PromptInputProps) {
   const isDisabled = disabled || isSubmitting
   const charsCount = value.length
-  const [reasoning, setReasoning] = useState("low")
 
   const buttonContent =
     reasoning === "low" ? (
