@@ -8,6 +8,7 @@
         <SpaRoot>..\CorporateStandardBotTest.UI</SpaRoot>
         <SpaProxyLaunchCommand>pnpm dev</SpaProxyLaunchCommand>
         <SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,5 +27,11 @@
         <ProjectReference Include="..\CorporateStandardBotTest.UI\CorporateStandardBotTest.UI.esproj">
             <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
         </ProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>
