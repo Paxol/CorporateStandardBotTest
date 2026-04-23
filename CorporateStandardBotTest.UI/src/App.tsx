@@ -9,8 +9,9 @@ import { LoadingMessage } from "@/components/LoadingMessage"
 import { SquarePenIcon } from "lucide-react"
 
 type AiChatMessage = components["schemas"]["AiChatMessage"]
+type AiReasoningEffort = components["schemas"]["AiReasoningEffort"]
 
-const USER_ROLE = 0
+const USER_ROLE = "User"
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error && error.message) {
@@ -44,7 +45,7 @@ function App() {
   const pendingPromptRef = useRef<string | null>(null)
   const scrollAnchorRef = useRef<HTMLDivElement | null>(null)
   const lastUserMessageRef = useRef<HTMLDivElement | null>(null)
-  const [reasoning, setReasoning] = useState<"low" | "medium">("low")
+  const [reasoning, setReasoning] = useState<AiReasoningEffort>("Low")
   const mutation = $api.useMutation("post", "/api/chat/complete")
 
   useEffect(() => {
@@ -69,7 +70,7 @@ function App() {
       return
     }
 
-    const nextMessages = [...messages, { role: USER_ROLE, content }]
+    const nextMessages = [...messages, { role: USER_ROLE, content } as const]
 
     pendingPromptRef.current = content
     setSubmitError(null)
@@ -77,7 +78,7 @@ function App() {
     setPrompt("")
 
     mutation.mutate(
-      { body: { messages: nextMessages } },
+      { body: { chat: { messages: nextMessages }, reasoningEffort: reasoning } },
       {
         onSuccess: (assistantMessage) => {
           pendingPromptRef.current = null

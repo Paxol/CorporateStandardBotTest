@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CorporateStandardBotTest.BusinessLogic.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
@@ -18,6 +19,10 @@ builder.Services.AddAuthorization();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 var app = builder.Build();
 

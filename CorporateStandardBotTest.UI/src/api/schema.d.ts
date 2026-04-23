@@ -22,7 +22,7 @@ export interface paths {
             };
             requestBody: {
                 content: {
-                    "application/json": components["schemas"]["AiChat"];
+                    "application/json": components["schemas"]["AiCompletionRequest"];
                 };
             };
             responses: {
@@ -69,7 +69,14 @@ export interface components {
             url: string;
             name: string;
         };
-        AiMessageRole: number;
+        AiCompletionRequest: {
+            chat: components["schemas"]["AiChat"];
+            reasoningEffort: components["schemas"]["AiReasoningEffort"];
+        };
+        /** @enum {unknown} */
+        AiMessageRole: "User" | "Assistant";
+        /** @enum {unknown} */
+        AiReasoningEffort: "None" | "Low" | "Medium";
         ProblemDetails: {
             type?: null | string;
             title?: null | string;

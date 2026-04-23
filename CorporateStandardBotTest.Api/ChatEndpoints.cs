@@ -18,10 +18,10 @@ public class ChatEndpoints : IEndpointRouteHandlerBuilder
             .ProducesProblem(500);
     }
 
-    private static async Task<IResult> HandleCompleteAsync(HttpContext context, [FromBody] AiChat chat,
+    private static async Task<IResult> HandleCompleteAsync(HttpContext context, [FromBody] AiCompletionRequest request,
         [FromServices] IKnowledgeBaseService kbService)
     {
-        var result = await kbService.GetResponseAsync(chat);
+        var result = await kbService.GetResponseAsync(request);
 
         return result.Match<IResult>(
             success => Results.Ok(success),

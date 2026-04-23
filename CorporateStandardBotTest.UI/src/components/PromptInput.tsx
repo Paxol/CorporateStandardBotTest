@@ -14,15 +14,18 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { components } from "@/api/schema"
 import { Button } from "@/components/ui/button"
-import { SnailIcon, ZapIcon } from "lucide-react"
+import { BrainIcon, CpuIcon, ZapIcon } from "lucide-react"
+
+type AiReasoningEffort = components["schemas"]["AiReasoningEffort"]
 
 type PromptInputProps = {
   name?: string
   value: string
   onValueChange: (value: string) => void
-  reasoning: "low" | "medium"
-  setReasoning: (reasoning: "low" | "medium") => void
+  reasoning: AiReasoningEffort
+  setReasoning: (reasoning: AiReasoningEffort) => void
   disabled?: boolean
   isSubmitting?: boolean
   maxLength?: number
@@ -41,17 +44,6 @@ export function PromptInput({
   const isDisabled = disabled || isSubmitting
   const charsCount = value.length
 
-  const buttonContent =
-    reasoning === "low" ? (
-      <>
-        <ZapIcon /> Low
-      </>
-    ) : (
-      <>
-        <SnailIcon /> Medium
-      </>
-    )
-
   return (
     <InputGroup
       data-disabled={isDisabled ? "true" : undefined}
@@ -67,8 +59,7 @@ export function PromptInput({
         rows={4}
         onChange={(e) => onValueChange(e.currentTarget.value)}
         onKeyDown={(e) => {
-          if (e.key == "Enter" && !e.shiftKey)
-          {
+          if (e.key == "Enter" && !e.shiftKey) {
             e.preventDefault()
             e.currentTarget.form?.requestSubmit()
           }
@@ -80,19 +71,22 @@ export function PromptInput({
           <DropdownMenuTrigger
             render={
               <Button className="cursor-pointer" variant="outline" disabled={isDisabled}>
-                {buttonContent}
+                <ReasoningLabel reasoning={reasoning} />
               </Button>
             }
           />
-          <DropdownMenuContent className="min-w-40">
+          <DropdownMenuContent className="min-w-50">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Select Reasoning Effort</DropdownMenuLabel>
               <DropdownMenuRadioGroup value={reasoning} onValueChange={setReasoning}>
-                <DropdownMenuRadioItem value="low">
-                  <ZapIcon /> Low
+                <DropdownMenuRadioItem closeOnClick value="None">
+                  <ReasoningLabel reasoning={"None"} />
                 </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="medium">
-                  <SnailIcon /> Medium
+                <DropdownMenuRadioItem closeOnClick value="Low">
+                  <ReasoningLabel reasoning={"Low"} />
+                </DropdownMenuRadioItem>
+                <DropdownMenuRadioItem closeOnClick value="Medium">
+                  <ReasoningLabel reasoning={"Medium"} />
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuGroup>
@@ -108,4 +102,21 @@ export function PromptInput({
       </InputGroupAddon>
     </InputGroup>
   )
+}
+
+function ReasoningLabel(props: { reasoning: AiReasoningEffort }) {
+
+  if (props.reasoning === "None")
+    return <>
+      <ZapIcon /> <span className="text-nowrap">Instant Response</span>
+    </>
+
+  if (props.reasoning === "Low")
+    return <>
+      <BrainIcon /> <span className="text-nowrap">Medium Reasoning</span>
+    </>
+
+  return <>
+    <CpuIcon /> <span className="text-nowrap">High Reasoning</span>
+  </>
 }
