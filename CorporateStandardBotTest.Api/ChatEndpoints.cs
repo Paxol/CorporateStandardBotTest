@@ -10,7 +10,6 @@ public class ChatEndpoints : IEndpointRouteHandlerBuilder
     public static void MapEndpoints(IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/chat")
-            .AllowAnonymous()
             .WithTags("ChatEndpoints");
 
         group.MapPost("complete", HandleCompleteAsync)
